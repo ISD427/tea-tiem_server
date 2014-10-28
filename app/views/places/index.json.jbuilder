@@ -1,1 +1,1 @@
-json.hoge @hoge
+json.prev @prev
