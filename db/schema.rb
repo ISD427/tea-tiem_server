@@ -29,13 +29,6 @@ ActiveRecord::Schema.define(version: 20141028140448) do
     t.datetime "updated_at"
   end
 
-  create_table "tmpplaces", force: true do |t|
-    t.string   "user_id"
-    t.string   "cafename"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "users", id: false, force: true do |t|
     t.string   "id",         null: false
     t.string   "username"

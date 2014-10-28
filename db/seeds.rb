@@ -29,43 +29,65 @@ Check.create(
     )
 sleep(1)
 Check.create(
+    user_id: "user02",
+    cafename: "collection",
+    action: "IN"
+    )
+sleep(1)
+Check.create(
+    user_id: "user03",
+    cafename: "collection",
+    action: "IN"
+    )
+sleep(1)
+Check.create(
+    user_id: "user04",
+    cafename: "collection",
+    action: "IN"
+    )
+# sleep(1)
+# Check.create(
+#     user_id: "user01",
+#     cafename: "collection",
+#     action: "OUT"
+#     )
+# sleep(1)
+# Check.create(
+#     user_id: "user02",
+#     cafename: "collection",
+#     action: "OUT"
+#     )
+# sleep(1)
+# Check.create(
+#     user_id: "user03",
+#     cafename: "collection",
+#     action: "OUT"
+#     )
+# sleep(1)
+# Check.create(
+#     user_id: "user04",
+#     cafename: "collection",
+#     action: "OUT"
+#     )
+
+# == Checkinテーブル
+Checkin.create(
     user_id: "user01",
     cafename: "collection",
-    action: "OUT"
+    status: "IN"
     )
-sleep(1)
-Check.create(
+Checkin.create(
     user_id: "user02",
     cafename: "collection",
-    action: "IN"
+    status: "IN"
     )
-sleep(1)
-Check.create(
-    user_id: "user02",
-    cafename: "collection",
-    action: "OUT"
-    )
-sleep(1)
-Check.create(
+Checkin.create(
     user_id: "user03",
     cafename: "collection",
-    action: "IN"
+    status: "IN"
     )
-sleep(1)
-Check.create(
-    user_id: "user03",
-    cafename: "collection",
-    action: "OUT"
-    )
-sleep(1)
-Check.create(
+Checkin.create(
     user_id: "user04",
     cafename: "collection",
-    action: "IN"
-    )
-sleep(1)
-Check.create(
-    user_id: "user04",
-    cafename: "collection",
-    action: "OUT"
+    status: "IN"
     )

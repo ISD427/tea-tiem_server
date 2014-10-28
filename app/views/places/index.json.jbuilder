@@ -1,1 +1,1 @@
-json.prev @res
+json.prev @mates
