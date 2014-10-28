@@ -11,4 +11,13 @@
 #
 
 class Checkin < ActiveRecord::Base
+
+# == association
+    belongs_to :user
+
+# == validation
+    validates :cafename, #1..50 chars
+        length: { minimum: 1, maximum: 50 }
+    validates :action, # 'IN' or 'OUT'
+        inclusion: { in: ['IN', 'OUT']}
 end

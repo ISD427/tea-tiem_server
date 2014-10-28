@@ -25,71 +25,54 @@ class PlacesController < ApplicationController
     # 現在地情報を受け取り，カフェにいるかどうかを判定する
     def place
         # =================================================
-        # + チェックインしていない場合
-        #   * 現在地がカフェの場合
-        #       - 前の位置が現在地と同じ場合，Checkin処理
-        #       - 前の位置が現在地と違う場合，Tmp更新
-        #   * 現在地がカフェでない場合，何もしない
-        # + チェックインしている場合
-        #   * 現在地がカフェの場合，何もしない
-        #   * 現在地がカフェでない場合，Checkout処理・Tmp更新
+        # + チェックインしていない => 
+        #   * 現在地がカフェ => 
+        #       - 前の位置が現在地と同じ => Checkin処理
+        #       - 前の位置が現在地と違う => Tmp更新
+        #   * 現在地がカフェでない => 何もしない
+        # + チェックインしている => 
+        #   * 現在地がカフェ => 何もしない
+        #   * 現在地がカフェでない => Checkout処理，Tmp更新
         # ==================================================
 
         # == 準備
         user_id = params[:user_id].nil? ? "A" : params[:user_id]
         location = "30.004982,135.765843"
-        #カフェ情報を取得
-        cafe = fetchPlace(location, "cafe")
-        puts cafe
+        cafe = fetchPlace(location, "cafe") # APIからカフェを取得
         cafename = cafe["name"]
-        # 前回位置を取得
+
+        # 前回取得時の場所を取得
         prev = Tmpplace.where(user_id: user_id).order(:updated_at).last
-        # 現在のチェックイン状態を取得
+        # ステータス（checkin or checkout）
         status = Checkin.where(user_id: user_id).order(:updated_at).last
 
         # == ステータス判定
-        # チェックインしていない場合
-        if status.action == "OUT" then
+        case status.action
+        when "OUT" then
             # 現在地がカフェの場合
             if !cafe.empty? then
-                if prev.cafename == cafename then 
-                    # 前回の場所と同じカフェの場合はCheckin処理
-                    chkin = Checkin.new(
-                            :user_id => user_id,
-                            :cafename => cafename,
-                            :action => "IN"
-                        )
-                    chkin.save
-                    @result = "No checkin, Yes now cafe, Yes prev cafe"
+                # 前回取得時と同じカフェの場合
+                if prev.cafename == cafename then
+                    check(user_id, cafename, "IN")
+                    puts "CHECK IN : " + cafename
+                # 前回取得時と異なるカフェの場合
                 else
-                    # 前回と違う場合はTmpplaceを新しいカフェ名に更新
-                    prev.update(cafename: cafename)
-                    @result = "No checkin, Yes now cafe, No prev cafe"
+                    prev.update(cafename: cafename) # 前回位置情報を更新
+                    puts "Next time you will CHECK IN"
                 end
-            # 現在地がカフェにいない場合
+            # 現在地がカフェでない場合
             else
-                puts "カフェにいませんことよ"
-                puts "何もしませんことよ"
-                @result = "No checkin, No now cafe"
+                puts "There is no cafes around here"
             end
-        # チェックインしている場合
-        else
+        when "IN" then
             # 現在地がカフェでない場合
             if cafe.empty? then
-                # チェックアウト処理
-                chkout = Checkin.new(
-                        :user_id => user_id,
-                        :cafename => status.cafename,
-                        :action => "OUT"
-                    )
-                chkout.save
-                # Tmpplaceを更新
-                prev.update(cafename: "NULL")
-                @result = "Yes checkin, No now cafe"
+                check(user_id, status.cafename, "OUT") # チェックアウト
+                prev.update(cafename: "NULL") # 前回位置情報を更新
+                puts "CHECK OUT : " + status.cafename
             # 現在地がカフェの場合，なにもしない
             else
-                @result = "Yes checkin, Yes now cafe"
-                puts "カフェにいますことよ"
+                puts "You have been in the cafe"
             end
         end
     end
@@ -114,7 +97,7 @@ class PlacesController < ApplicationController
 
         # params: location, types
         # return: hashオブジェクト
-        # Google Places APIを用いてJsonを取得する
+        # Google Places APIを用いて1つの場所オブジェクトを取得
         def fetchPlace (location, types)
             # APIリクエストの作成
             cond = {
@@ -140,6 +123,19 @@ class PlacesController < ApplicationController
             else
                 #カフェを一意に判定するのが正しいがとりあえずは1番上のもの
                 return  cafes["results"][0]
+            end
+        end
+
+        # params: user_id, cafename
+        # チェックイン・チェックアウトを行う
+        def check (user_id, cafename, action)
+            chkin = Checkin.new(
+                    :user_id => user_id,
+                    :cafename => cafename,
+                    :action => action
+                )
+            if !chkin.save then
+              render json: '{"mesage" : "error: check parameters"}'
             end
         end
 end
