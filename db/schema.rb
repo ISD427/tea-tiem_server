@@ -11,9 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141028031524) do
+ActiveRecord::Schema.define(version: 20141028140448) do
 
   create_table "checkins", force: true do |t|
+    t.string   "user_id"
+    t.string   "cafename"
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "checks", force: true do |t|
     t.string   "user_id"
     t.string   "cafename"
     t.string   "action"
@@ -33,6 +41,7 @@ ActiveRecord::Schema.define(version: 20141028031524) do
     t.string   "username"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "sex"
   end
 
   add_index "users", ["id"], name: "index_users_on_id", unique: true, using: :btree

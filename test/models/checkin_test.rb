@@ -5,7 +5,7 @@
 #  id         :integer          not null, primary key
 #  user_id    :string(255)
 #  cafename   :string(255)
-#  action     :string(255)
+#  status     :string(255)
 #  created_at :datetime
 #  updated_at :datetime
 #

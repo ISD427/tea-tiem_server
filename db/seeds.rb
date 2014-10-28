@@ -1,36 +1,71 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
+# == ssersテーブル
+User.create(
+    id: "user01",
+    username: "庄田１郎",
+    sex: "Male"
+    )
+User.create(
+    id: "user02",
+    username: "庄田２郎",
+    sex: "Male"
+    )
+User.create(
+    id: "user03",
+    username: "庄田さとみ",
+    sex: "Female"
+    )
+User.create(
+    id: "user04",
+    username: "庄田美玲",
+    sex: "Female"
+    )
 
-# =============================
-# 実験
-# =============================
 
-# == Checkinテーブル
-collin = Checkin.create(
-    user_id: "A",
+# == Checkテーブル
+Check.create(
+    user_id: "user01",
     cafename: "collection",
     action: "IN"
     )
 sleep(1)
-collout = Checkin.create(
-    user_id: "A",
+Check.create(
+    user_id: "user01",
     cafename: "collection",
     action: "OUT"
     )
 sleep(1)
-starin = Checkin.create(
-    user_id: "A",
-    cafename: "京 倶楽部 Cafe",
+Check.create(
+    user_id: "user02",
+    cafename: "collection",
     action: "IN"
     )
-
-# == Tmpplaceテーブル
-tmpA = Tmpplace.create(
-    user_id: "A",
-    cafename: "NULL"
+sleep(1)
+Check.create(
+    user_id: "user02",
+    cafename: "collection",
+    action: "OUT"
+    )
+sleep(1)
+Check.create(
+    user_id: "user03",
+    cafename: "collection",
+    action: "IN"
+    )
+sleep(1)
+Check.create(
+    user_id: "user03",
+    cafename: "collection",
+    action: "OUT"
+    )
+sleep(1)
+Check.create(
+    user_id: "user04",
+    cafename: "collection",
+    action: "IN"
+    )
+sleep(1)
+Check.create(
+    user_id: "user04",
+    cafename: "collection",
+    action: "OUT"
     )

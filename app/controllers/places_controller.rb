@@ -7,17 +7,6 @@ class PlacesController < ApplicationController
     # params: location(latitude,longtitudeの形)
     # テスト用
     def index
-        # user_id = paramas[:user_id]
-        user_id = "A"
-        location = params[:location]
-        
-        # デバッグ用
-        if params[:location].nil? then
-            location = "35.004982,135.765843"
-        end
-
-        @prev = Tmpplace.where(user_id: user_id).order(:updated_at).last
-
     end
 
     # GET /places/place.json
@@ -27,52 +16,50 @@ class PlacesController < ApplicationController
         # =================================================
         # + チェックインしていない => 
         #   * 現在地がカフェ => 
-        #       - 前の位置が現在地と同じ => Checkin処理
-        #       - 前の位置が現在地と違う => Tmp更新
+        #       - 前の位置が現在地と同じ => Check, Checkin処理(status = IN)
+        #       - 前の位置が現在地と違う => Checkin処理(status = PROCESS)
         #   * 現在地がカフェでない => 何もしない
         # + チェックインしている => 
         #   * 現在地がカフェ => 何もしない
-        #   * 現在地がカフェでない => Checkout処理，Tmp更新
+        #   * 現在地がカフェでない => Check処理，Checkin処理(削除)
         # ==================================================
 
         # == 準備
-        user_id = params[:user_id].nil? ? "A" : params[:user_id]
-        location = "30.004982,135.765843"
+        user_id = params[:user_id].nil? ? "user01" : params[:user_id]
+        location = params[:location].nil? ? "35.004982,135.765843" : params[:location]
         cafe = fetchPlace(location, "cafe") # APIからカフェを取得
-        cafename = cafe["name"]
 
-        # 前回取得時の場所を取得
-        prev = Tmpplace.where(user_id: user_id).order(:updated_at).last
-        # ステータス（checkin or checkout）
-        status = Checkin.where(user_id: user_id).order(:updated_at).last
 
-        # == ステータス判定
-        case status.action
-        when "OUT" then
-            # 現在地がカフェの場合
-            if !cafe.empty? then
-                # 前回取得時と同じカフェの場合
-                if prev.cafename == cafename then
-                    check(user_id, cafename, "IN")
-                    puts "CHECK IN : " + cafename
-                # 前回取得時と異なるカフェの場合
-                else
-                    prev.update(cafename: cafename) # 前回位置情報を更新
-                    puts "Next time you will CHECK IN"
-                end
-            # 現在地がカフェでない場合
-            else
-                puts "There is no cafes around here"
+        # 現在地がカフェの場合
+        if !cafe.empty? then
+            # カフェ名とステータスの取得
+            cafename = cafe["name"]
+            chkin = Checkin.find_by(user_id: user_id, cafename: cafename)
+
+            if chkin.nil? then
+                toWaiting(user_id, cafename)
+                puts cafename + "に次でチェックインできます"
+            elsif chkin.status == "WAITING" then
+                checkin(user_id, cafename)
+                puts cafename + "にチェックインしました"
+            elsif chkin.status == "IN" then
+                puts "既にチェックイン済みです．ゆっくりしていってね！"
             end
-        when "IN" then
-            # 現在地がカフェでない場合
-            if cafe.empty? then
-                check(user_id, status.cafename, "OUT") # チェックアウト
-                prev.update(cafename: "NULL") # 前回位置情報を更新
-                puts "CHECK OUT : " + status.cafename
-            # 現在地がカフェの場合，なにもしない
+        # 現在地がカフェでない場合
+        else
+            chkin = Checkin.find_by(user_id: user_id)
+            # checkins
+            if !chkin.nil? then
+                case chkin.status
+                when "IN"
+                    checkout(user_id, chkin.cafename)
+                    puts chkin.cafename + "からチェックアウトしました"
+                when "WAITING"
+                    Checkin.destroy_all(user_id: user_id)
+                    puts chkin.cafename + "は通りかかっただけですね"
+                end
             else
-                puts "You have been in the cafe"
+                puts "近くにカフェがありません"
             end
         end
     end
@@ -127,15 +114,57 @@ class PlacesController < ApplicationController
         end
 
         # params: user_id, cafename
-        # チェックイン・チェックアウトを行う
-        def check (user_id, cafename, action)
-            chkin = Checkin.new(
+        # チェックインを行う
+        # checksテーブルにログを残す，checkinテーブルのstatusをINにする
+        def checkin (user_id, cafename)
+            chk = Check.new(
                     :user_id => user_id,
                     :cafename => cafename,
-                    :action => action
+                    :action => "IN"
                 )
-            if !chkin.save then
+            chkin = Checkin.find_by(user_id: user_id)
+            chkin.update(status: "IN")
+
+            if !chk.save then
               render json: '{"mesage" : "error: check parameters"}'
             end
+        end
+
+        # params: user_id, cafename
+        # チェックアウトを行う
+        # checksテーブルにログを残す，checkinテーブル
+        def checkout (user_id, cafename)
+            chk = Check.new(
+                    :user_id => user_id,
+                    :cafename => cafename,
+                    :action => "OUT"
+                )
+            Checkin.destroy_all(user_id: user_id)
+            if !chk.save then
+              render json: '{"mesage" : "error: check parameters"}'
+            end
+        end
+
+        # params: user_id, cafename
+        # チェックイン待機状態(status = WAITING)にする
+        def toWaiting (user_id, cafename)
+            # レコードがあれば更新，なければ作成
+            if Checkin.where(user_id: user_id).exists? then
+                Check.find_by(user_id: user_id).update(cafename: cafename, status: "WAITING")
+            else
+                chkin = Checkin.new(
+                        user_id: user_id,
+                        cafename: cafename,
+                        status: "WAITING"
+                    )
+                if !chkin.save then
+                    render text: chkin.errors.messages
+                end 
+            end
+        end
+
+        # params: user_id, cafename
+        # 同じカフェにいる異性を探す
+        def findCafeMate(user, cafename)
         end
 end
