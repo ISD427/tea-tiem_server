@@ -7,7 +7,7 @@ class PlacesController < ApplicationController
     # params: location(latitude,longtitudeの形)
     # テスト用
     def index
-        @mates = findCafeMate("user01", "collection")
+        @mates = findCafeMates("user01", "collection")
     end
 
     # GET /places/place.json
@@ -166,7 +166,7 @@ class PlacesController < ApplicationController
 
         # params: user_id, cafename
         # 同じカフェにいる異性を探す
-        def findCafeMate(user_id, cafename)
+        def findCafeMates(user_id, cafename)
             user = User.find(user_id)
             tsex = (user.sex == "Male") ? "Female" : "Male"
             mates = Checkin.joins(:user).where("cafename = :cafename AND status = 'IN' AND users.sex = :sex", cafename: cafename, sex: tsex).where.not(user_id: user_id)
