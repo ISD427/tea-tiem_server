@@ -22,72 +22,68 @@ User.create(
 
 
 # == Checkテーブル
-Check.create(
-    user_id: "user01",
-    cafename: "collection",
-    action: "IN"
-    )
-sleep(1)
-Check.create(
-    user_id: "user02",
-    cafename: "collection",
-    action: "IN"
-    )
-sleep(1)
-Check.create(
-    user_id: "user03",
-    cafename: "collection",
-    action: "IN"
-    )
-sleep(1)
-Check.create(
-    user_id: "user04",
-    cafename: "collection",
-    action: "IN"
-    )
+# Check.create(
+#     user_id: "user01",
+#     cafename: "京 倶楽部 Cafe",
+#     action: "IN"
+#     )
+# sleep(1)
+# Check.create(
+#     user_id: "user02",
+#     cafename: "京 倶楽部 Cafe",
+#     action: "IN"
+#     )
+# sleep(1)
+# Check.create(
+#     user_id: "user03",
+#     cafename: "京 倶楽部 Cafe",
+#     action: "IN"
+#     )
+# sleep(1)
+# Check.create(
+#     user_id: "user04",
+#     cafename: "京 倶楽部 Cafe",
+#     action: "IN"
+#     )
 # sleep(1)
 # Check.create(
 #     user_id: "user01",
-#     cafename: "collection",
+#     cafename: "京 倶楽部 Cafe",
 #     action: "OUT"
 #     )
 # sleep(1)
 # Check.create(
 #     user_id: "user02",
-#     cafename: "collection",
+#     cafename: "京 倶楽部 Cafe",
 #     action: "OUT"
 #     )
 # sleep(1)
 # Check.create(
 #     user_id: "user03",
-#     cafename: "collection",
+#     cafename: "京 倶楽部 Cafe",
 #     action: "OUT"
 #     )
 # sleep(1)
 # Check.create(
 #     user_id: "user04",
-#     cafename: "collection",
+#     cafename: "京 倶楽部 Cafe",
 #     action: "OUT"
 #     )
 
-# == Checkinテーブル
-Checkin.create(
+# == Statusテーブル
+Status.create(
     user_id: "user01",
-    cafename: "collection",
-    status: "IN"
+    status: "OUT"
     )
-Checkin.create(
+Status.create(
     user_id: "user02",
-    cafename: "collection",
-    status: "IN"
+    status: "OUT"
     )
-Checkin.create(
+Status.create(
     user_id: "user03",
-    cafename: "collection",
-    status: "IN"
+    status: "OUT"
     )
-Checkin.create(
+Status.create(
     user_id: "user04",
-    cafename: "collection",
-    status: "IN"
+    status: "OUT"
     )

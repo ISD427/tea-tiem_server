@@ -11,20 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141028140448) do
-
-  create_table "checkins", force: true do |t|
-    t.string   "user_id"
-    t.string   "cafename"
-    t.string   "status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
+ActiveRecord::Schema.define(version: 20141029021556) do
 
   create_table "checks", force: true do |t|
     t.string   "user_id"
     t.string   "cafename"
     t.string   "action"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "statuses", force: true do |t|
+    t.string   "user_id"
+    t.string   "cafename"
+    t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

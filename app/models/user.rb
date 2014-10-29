@@ -13,8 +13,6 @@ class User < ActiveRecord::Base
     self.primary_key = :id
 
 # == association
-    has_many :checkins
-    has_many :tmpplaces
 
 # == validation
     validates :username, #1..20 chars
