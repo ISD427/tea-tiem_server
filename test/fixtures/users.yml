@@ -1,0 +1,21 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id         :string(255)      not null, primary key
+#  username   :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#  sex        :string(255)
+#  profile    :string(255)
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+userA:
+  id: A
+  username: A
+
+userB:
+  id: B
+  username: B

@@ -1,1 +1,1 @@
-json.hoge @hoge
+json.result @mates
