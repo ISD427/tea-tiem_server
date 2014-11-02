@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
-    get 'places/index'
     get 'places/place'
     get 'places/friend_list'
 
     get 'users/detail'
     post 'users/add'
     post 'users/edit'
+    post 'users/test'
 
     get 'friendships/list'
 

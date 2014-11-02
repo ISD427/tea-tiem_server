@@ -3,21 +3,19 @@ class PlacesController < ApplicationController
     require 'uri'
     require 'json'
 
-    # GET /places/index
-    # テスト用
-    def index
-    end
-
     # GET /places/friend_list.json
-    # params: user_id, cafename
+    # params: user_id
     # カフェ内にいる異性を検索
     def friend_list
         user = User.find(params[:user_id])
-        @cafename = params[:cafename]
+        @cafename = user.status.cafename
         tsex = (user.sex == "Male") ? "Female" : "Male"
 
         # カフェ内にいる異性のid配列を取得
         friend_ids = Status.joins(:user).where("cafename = :cafename AND status = 'IN' AND users.sex = :sex", cafename: @cafename, sex: tsex).where.not(user_id: user.id).pluck(:user_id)
+
+        # カフェ内にいる異性との関係を更新する
+        update_friendships(user.id, friend_ids, @cafename)
 
         # カフェ内にいる異性との関係性を取得
         @friendships = Friendship.where(source_id: user.id, target_id: friend_ids)
@@ -31,44 +29,44 @@ class PlacesController < ApplicationController
         user_id = params[:user_id].nil? ? "user01" : params[:user_id]
         location = params[:location].nil? ? "35.004982,135.765843" : params[:location]
         currcafe = fetchPlace(location, "cafe") # APIからカフェを取得
-        st = Status.find_by(user_id: user_id) # ステータスデータ
+        @st = Status.find_by(user_id: user_id) # ステータスデータ
 
         # 現在地がカフェの場合
         if !currcafe.empty? then
-            case st.status
+            case @st.status
             when "OUT" then
-                @msg = currcafe['name'] + "　に次でチェックインできます"
-                st.update(cafename: currcafe['name'], status: "WAITING")
+                @msg = currcafe['name'] + "にチェックインしています"
+                @st.update(cafename: currcafe['name'], status: "WAITING")
             when "WAITING" then
-                if st.cafename == currcafe['name'] then
-                    @msg = currcafe['name'] + "　にチェックインしました"
+                if @st.cafename == currcafe['name'] then
+                    @msg = "現在" + currcafe['name'] + "にいます"
                     checkin(user_id, currcafe['name'])
-                    st.update(status: "IN")
+                    @st.update(status: "IN")
                 else
-                    @msg = currcafe['name'] + "　に次でチェックインできます"
-                    st.update(cafename: currcafe['name'], status: "WAITING")
+                    @msg = currcafe['name'] + "にチェックインしています"
+                    @st.update(cafename: currcafe['name'], status: "WAITING")
                 end
             when "IN" then
-                if st.cafename == currcafe['name'] then
-                    @msg = currcafe['name'] + "　にチェックイン済みです"
+                if @st.cafename == currcafe['name'] then
+                    @msg = "現在" + currcafe['name'] + "にいます"
                 else
-                    @msg = st.cafename + "　からチェックアウトしました．" + currcafe['name'] + "　に次でチェックインできます．"
-                    checkout(user_id, st.cafename)
-                    st.update(cafename: currcafe['name'], status: "WAITING")
+                    @msg = currcafe['name'] + "にチェックインしています"
+                    checkout(user_id, @st.cafename)
+                    @st.update(cafename: currcafe['name'], status: "WAITING")
                 end
             end
         # 現在地がカフェでない場合
         else
-            case st.status
+            case @st.status
             when "OUT" then
                 @msg = "近くにカフェがありません"
             when "WAITING" then
-                @msg = st.cafename + "　はたまたま通りかかっただけですね"
-                st.update(cafename: nil, status: "OUT")
+                @msg = "近くにカフェがありません"
+                @st.update(cafename: nil, status: "OUT")
             when "IN" then
-                @msg = st.cafename + "　からチェックアウトしました"
-                checkout(user_id, st.cafename)
-                st.update(cafename: nil, status: "OUT")
+                @msg = "近くにカフェがありません"
+                checkout(user_id, @st.cafename)
+                @st.update(cafename: nil, status: "OUT")
             end
         end
     end
@@ -151,13 +149,21 @@ class PlacesController < ApplicationController
             end
         end
 
-        # params: user_id
-        # 同じカフェにいる異性を探す
-        def findCafeFriends(user_id)
-            user = User.find(user_id)
-            cafename = Status.find_by(user_id: user_id).cafename
-            tsex = (user.sex == "Male") ? "Female" : "Male"
-            friends = Status.joins(:user).where("cafename = :cafename AND status = 'IN' AND users.sex = :sex", cafename: cafename, sex: tsex).where.not(user_id: user_id)
-            return friends
+        # params: source_id, target_ids
+        # カフェ内にいる異性との関係を更新する
+        def update_friendships(source_id, target_ids, cafename)
+            for target_id in target_ids do
+                friendship = Friendship.find_by(source_id: source_id, target_id: target_id)
+                if friendship.nil? then
+                    Friendship.create(
+                        source_id: source_id,
+                        target_id: target_id,
+                        first_time: true,
+                        cafename: cafename
+                        )
+                else
+                    friendship.update(first_time: false, cafename: cafename)
+                end
+            end
         end
 end
