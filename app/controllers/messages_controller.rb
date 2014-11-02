@@ -30,7 +30,7 @@ class MessagesController < ApplicationController
         msg = Message.new(
             :source_id => params[:source_id],
             :target_id => params[:target_id],
-            :message => params[:msg],
+            :message => params[:message],
             :deleted => false
             )
         if msg.save then

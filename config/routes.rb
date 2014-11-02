@@ -12,9 +12,4 @@ Rails.application.routes.draw do
     get '/messages/receive'
     post '/messages/write'
     post 'messages/delete'
-
-    get '/images/list'
-    post '/images/add'
-    post '/images/delete'
-    post '/images/icon'
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141102123419) do
+ActiveRecord::Schema.define(version: 20141102141916) do
 
   create_table "checks", force: true do |t|
     t.string   "user_id"
@@ -29,18 +29,6 @@ ActiveRecord::Schema.define(version: 20141102123419) do
     t.datetime "updated_at"
     t.string   "cafename"
     t.datetime "time"
-  end
-
-  create_table "images", force: true do |t|
-    t.string   "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "image_file_name"
-    t.string   "image_content_type"
-    t.integer  "image_file_size"
-    t.datetime "image_updated_at"
-    t.boolean  "deleted"
-    t.boolean  "icon"
   end
 
   create_table "messages", force: true do |t|
@@ -61,13 +49,17 @@ ActiveRecord::Schema.define(version: 20141102123419) do
   end
 
   create_table "users", id: false, force: true do |t|
-    t.string   "id",         null: false
+    t.string   "id",                 null: false
     t.string   "username"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "sex"
     t.string   "profile"
-    t.string   "icon"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+    t.integer  "age"
   end
 
   add_index "users", ["id"], name: "index_users_on_id", unique: true, using: :btree

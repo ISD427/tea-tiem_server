@@ -14,6 +14,9 @@ class PlacesController < ApplicationController
         # カフェ内にいる異性のid配列を取得
         friend_ids = Status.joins(:user).where("cafename = :cafename AND status = 'IN' AND users.sex = :sex", cafename: @cafename, sex: tsex).where.not(user_id: user.id).pluck(:user_id)
 
+        # カフェ内にいる異性との関係を更新する
+        update_friendships(user.id, friend_ids, @cafename)
+
         # カフェ内にいる異性との関係性を取得
         @friendships = Friendship.where(source_id: user.id, target_id: friend_ids)
     end
@@ -146,13 +149,21 @@ class PlacesController < ApplicationController
             end
         end
 
-        # params: user_id
-        # 同じカフェにいる異性を探す
-        def findCafeFriends(user_id)
-            user = User.find(user_id)
-            cafename = Status.find_by(user_id: user_id).cafename
-            tsex = (user.sex == "Male") ? "Female" : "Male"
-            friends = Status.joins(:user).where("cafename = :cafename AND status = 'IN' AND users.sex = :sex", cafename: cafename, sex: tsex).where.not(user_id: user_id)
-            return friends
+        # params: source_id, target_ids
+        # カフェ内にいる異性との関係を更新する
+        def update_friendships(source_id, target_ids, cafename)
+            for target_id in target_ids do
+                friendship = Friendship.find_by(source_id: source_id, target_id: target_id)
+                if friendship.nil? then
+                    Friendship.create(
+                        source_id: source_id,
+                        target_id: target_id,
+                        first_time: true,
+                        cafename: cafename
+                        )
+                else
+                    friendship.update(first_time: false, cafename: cafename)
+                end
+            end
         end
 end
