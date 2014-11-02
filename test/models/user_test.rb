@@ -7,6 +7,7 @@
 #  created_at :datetime
 #  updated_at :datetime
 #  sex        :string(255)
+#  profile    :string(255)
 #
 
 require 'test_helper'

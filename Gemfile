@@ -26,7 +26,10 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 # added by Itoh
 gem 'annotate'
 gem 'mysql2'
-
+gem 'websocket-rails'
+gem 'paperclip'
+gem 'aws-sdk'
+gem 'rails-erd'
 
 
 # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring

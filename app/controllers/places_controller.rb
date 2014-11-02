@@ -4,10 +4,23 @@ class PlacesController < ApplicationController
     require 'json'
 
     # GET /places/index
-    # params: location(latitude,longtitudeの形) 
     # テスト用
     def index
-        @mates = findCafeMates(params[:user_id], params[:cafename])
+    end
+
+    # GET /places/friend_list.json
+    # params: user_id, cafename
+    # カフェ内にいる異性を検索
+    def friend_list
+        user = User.find(params[:user_id])
+        @cafename = params[:cafename]
+        tsex = (user.sex == "Male") ? "Female" : "Male"
+
+        # カフェ内にいる異性のid配列を取得
+        friend_ids = Status.joins(:user).where("cafename = :cafename AND status = 'IN' AND users.sex = :sex", cafename: @cafename, sex: tsex).where.not(user_id: user.id).pluck(:user_id)
+
+        # カフェ内にいる異性との関係性を取得
+        @friendships = Friendship.where(source_id: user.id, target_id: friend_ids)
     end
 
     # GET /places/place.json
@@ -121,7 +134,7 @@ class PlacesController < ApplicationController
                     :action => "IN"
                 )
             if !chk.save then
-              render json: '{"mesage" : "error: check parameters"}'
+              render json: chk.errors.messages
             end
         end
 
@@ -134,16 +147,17 @@ class PlacesController < ApplicationController
                     :action => "OUT"
                 )
             if !chk.save then
-              render json: '{"mesage" : "error: check parameters"}'
+              render json: chk.errors.messages
             end
         end
 
-        # params: user_id, cafename
+        # params: user_id
         # 同じカフェにいる異性を探す
-        def findCafeMates(user_id, cafename)
+        def findCafeFriends(user_id)
             user = User.find(user_id)
+            cafename = Status.find_by(user_id: user_id).cafename
             tsex = (user.sex == "Male") ? "Female" : "Male"
-            mates = Status.joins(:user).where("cafename = :cafename AND status = 'IN' AND users.sex = :sex", cafename: cafename, sex: tsex).where.not(user_id: user_id)
-            return mates
+            friends = Status.joins(:user).where("cafename = :cafename AND status = 'IN' AND users.sex = :sex", cafename: cafename, sex: tsex).where.not(user_id: user_id)
+            return friends
         end
 end

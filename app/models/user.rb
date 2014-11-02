@@ -7,12 +7,19 @@
 #  created_at :datetime
 #  updated_at :datetime
 #  sex        :string(255)
+#  profile    :string(255)
 #
 
 class User < ActiveRecord::Base
     self.primary_key = :id
 
 # == association
+    has_many :sends, class_name: "Message", foreign_key: "sid"
+    has_many :receives, class_name: "Message", foreign_key: "tid"
+    has_many :sources, class_name: "Friendship", foreign_key: "sid"
+    has_many :targets, class_name: "Friendship", foreign_key: "tid"
+    has_many :checks
+    has_one :status
 
 # == validation
     validates :username, #1..20 chars
