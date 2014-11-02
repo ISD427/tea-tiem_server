@@ -20,6 +20,7 @@ class User < ActiveRecord::Base
     has_many :targets, class_name: "Friendship", foreign_key: "tid"
     has_many :checks
     has_one :status
+    has_many :images
 
 # == validation
     validates :username, #1..20 chars

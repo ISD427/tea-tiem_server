@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141101145532) do
+ActiveRecord::Schema.define(version: 20141102123419) do
 
   create_table "checks", force: true do |t|
     t.string   "user_id"
@@ -39,6 +39,8 @@ ActiveRecord::Schema.define(version: 20141101145532) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
+    t.boolean  "deleted"
+    t.boolean  "icon"
   end
 
   create_table "messages", force: true do |t|
@@ -65,6 +67,7 @@ ActiveRecord::Schema.define(version: 20141101145532) do
     t.datetime "updated_at"
     t.string   "sex"
     t.string   "profile"
+    t.string   "icon"
   end
 
   add_index "users", ["id"], name: "index_users_on_id", unique: true, using: :btree
