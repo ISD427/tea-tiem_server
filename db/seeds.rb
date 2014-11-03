@@ -5,7 +5,7 @@ User.create(
     sex: "Male",
     profile: "profileだよ",
     age: 24,
-    image: File.open("/Users/admin/Pictures/male1.jpg")
+    image: URI.parse("http://www8391uo.sakura.ne.jp/images/male1.jpg")
     )
 User.create(
     id: "user02",
@@ -13,7 +13,7 @@ User.create(
     sex: "Male",
     profile: "profileだよ",
     age: 24,
-    image: File.open("/Users/admin/Pictures/male2.jpg")
+    image: URI.parse("http://www8391uo.sakura.ne.jp/images/male2.jpg")
     )
 User.create(
     id: "user03",
@@ -21,7 +21,7 @@ User.create(
     sex: "Male",
     profile: "profileだよ",
     age: 24,
-    image: File.open("/Users/admin/Pictures/male3.jpg")
+    image: URI.parse("http://www8391uo.sakura.ne.jp/images/male3.jpg")
     )
 User.create(
     id: "user11",
@@ -29,7 +29,7 @@ User.create(
     sex: "Female",
     profile: "profileだよ",
     age: 24,
-    image: File.open("/Users/admin/Pictures/female1.png")
+    image: URI.parse("http://www8391uo.sakura.ne.jp/images/female1.png")
     )
 User.create(
     id: "user12",
@@ -37,7 +37,7 @@ User.create(
     sex: "Female",
     profile: "profileだよ",
     age: 24,
-    image: File.open("/Users/admin/Pictures/female2.jpg")
+    image: URI.parse("http://www8391uo.sakura.ne.jp/images/female2.jpg")
     )
 User.create(
     id: "user13",
@@ -45,7 +45,7 @@ User.create(
     sex: "Female",
     profile: "profileだよ",
     age: 24,
-    image: File.open("/Users/admin/Pictures/female3.jpg")
+    image: URI.parse("http://www8391uo.sakura.ne.jp/images/female3.jpg")
     )
 
 # == Statusテーブル
