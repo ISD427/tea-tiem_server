@@ -3,9 +3,9 @@ Rails.application.routes.draw do
     get 'places/friend_list'
 
     get 'users/detail'
+    get 'users/own_detail'
     post 'users/add'
     post 'users/edit'
-    post 'users/test'
 
     get 'friendships/list'
 

@@ -1,51 +1,51 @@
-# == ssersテーブル
+# == usersテーブル
 User.create(
     id: "user01",
-    username: "庄田１郎",
+    username: "1郎",
     sex: "Male",
     profile: "profileだよ",
     age: 24,
-    image: URI.parse("http://www8391uo.sakura.ne.jp/images/000.png")
+    image: File.open("/Users/admin/Pictures/male1.jpg")
     )
 User.create(
     id: "user02",
-    username: "庄田２郎",
+    username: "2郎",
     sex: "Male",
     profile: "profileだよ",
     age: 24,
-    image: URI.parse("http://www8391uo.sakura.ne.jp/images/001.png")
+    image: File.open("/Users/admin/Pictures/male2.jpg")
     )
 User.create(
     id: "user03",
-    username: "庄田３郎",
+    username: "3郎",
     sex: "Male",
     profile: "profileだよ",
     age: 24,
-    image: URI.parse("http://www8391uo.sakura.ne.jp/images/002.png")
+    image: File.open("/Users/admin/Pictures/male3.jpg")
     )
 User.create(
     id: "user11",
-    username: "庄田１子",
+    username: "1子",
     sex: "Female",
     profile: "profileだよ",
     age: 24,
-    image: URI.parse("http://www8391uo.sakura.ne.jp/images/003.png")
+    image: File.open("/Users/admin/Pictures/female1.png")
     )
 User.create(
     id: "user12",
-    username: "庄田２子",
+    username: "2子",
     sex: "Female",
     profile: "profileだよ",
     age: 24,
-    image: URI.parse("http://www8391uo.sakura.ne.jp/images/004.png")
+    image: File.open("/Users/admin/Pictures/female2.jpg")
     )
 User.create(
     id: "user13",
-    username: "庄田３子",
+    username: "3子",
     sex: "Female",
     profile: "profileだよ",
     age: 24,
-    image: URI.parse("http://www8391uo.sakura.ne.jp/images/005.png")
+    image: File.open("/Users/admin/Pictures/female3.jpg")
     )
 
 # == Statusテーブル

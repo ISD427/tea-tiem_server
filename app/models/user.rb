@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
 
     self.primary_key = :id
     has_attached_file :image, 
-        styles: { large: "640x640>", medium: "320x320>", thumb: "60x60>" },
+        styles: { large: "640x640>", medium: "320x320>", thumb: "60x60>", mosaic: "20x20>" },
         path: "#{Rails.root}/public/system/:class/:id/:attachment/:style.:extension",
         url: "/system/:class/:id/:attachment/:style.:extension"
 
