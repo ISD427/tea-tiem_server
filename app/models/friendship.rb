@@ -5,6 +5,7 @@
 #  id         :integer          not null, primary key
 #  source_id  :string(255)
 #  target_id  :string(255)
+#  count      :integer
 #  first_time :boolean
 #  created_at :datetime
 #  updated_at :datetime

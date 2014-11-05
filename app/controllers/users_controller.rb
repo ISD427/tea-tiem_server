@@ -11,7 +11,7 @@ class UsersController < ApplicationController
             @friendship = {
             prev_cafe_name: @fs.cafename,
             prev_time: @fs.updated_at,
-            first_time: @fs.first_time
+            count: @fs.count
             }
         else
             render json: '{"status": "ERROR - No Friendship"}'

@@ -16,11 +16,13 @@ class ActivitiesController < ApplicationController
             activities.each do |activity|
                 msg = make_msg(activity) # メッセージ作成
                 user = get_user(activity) # activityの実行者
+                friendship = get_friendship(activity)
                 activity_hash = {
                     time: activity.created_at,
                     activity_code: activity.activity_code,
                     message: msg,
-                    user: user
+                    user: user,
+                    friendship: friendship
                 }
                 activities_list << activity_hash
             end
@@ -32,11 +34,12 @@ class ActivitiesController < ApplicationController
         # return: msg:string
         def make_msg(activity)
             msg_obj = JSON.parse(activity.message) # String -> Hash
-            user = User.find(msg_obj['user_id']) # user
+            target_user = User.find(msg_obj['user_id']) # アクティビティの実行者
 
             case activity.activity_code
             when 'meet' then
-                msg = MESSAGES['meet'].gsub(/\%username\%/, user.username)
+                count = msg_obj['count'] # カウント
+                msg = MESSAGES['meet'].gsub(/\%username\%/, target_user.username).gsub(/\%count\%/, count.to_s)
             else
                 msg = "アクティビティがありました"
             end
@@ -48,6 +51,15 @@ class ActivitiesController < ApplicationController
             messages = JSON.parse(activity.message)
             user = User.find(messages['user_id'])
             return user
+        end
+
+        # 閲覧者とアクティビティ実行者の関係を取得
+        # params: activity
+        def get_friendship(activity)
+            source_id = activity.user_id
+            target_id = JSON.parse(activity.message)['user_id']
+            friendship = Friendship.find_by(source_id: source_id, target_id: target_id)
+            return friendship
         end
 
 end

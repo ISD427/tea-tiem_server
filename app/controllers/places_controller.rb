@@ -156,20 +156,21 @@ class PlacesController < ApplicationController
             for target_id in target_ids do
                 friendship = Friendship.find_by(source_id: source_id, target_id: target_id)
                 if friendship.nil? then
-                    Friendship.create(
+                    friendship = Friendship.create(
                         source_id: source_id,
                         target_id: target_id,
+                        count: 1,
                         first_time: true,
                         cafename: cafename
                         )
 
                     # activitiesテーブルに追加
-                    to_activity('meet', source_id, target_id)
+                    to_activity('meet', friendship)
                     p "======= new friendship created!! ========="
                 elsif Time.now - friendship.updated_at > 30 then
-                    friendship.update(first_time: false, cafename: cafename, updated_at: Time.now)
+                    friendship.update(first_time: false, count: friendship.count + 1, cafename: cafename, updated_at: Time.now)
                     # activitiesテーブルに追加
-                    to_activity('meet', source_id, target_id)
+                    to_activity('meet', friendship)
                     p "========= friendship updated! ============"
                 else
                     p "======= friendship NOT updated ==========="
@@ -178,15 +179,15 @@ class PlacesController < ApplicationController
         end
 
         # activitiesテーブルにアクティビティを保存する
-        # params: activity_code, user_id, target_id
+        # params: activity_code, friendship
         # user_id: アクティビティを表示する人
         # target_id: アクティビティの実行者
         # return: void
-        def to_activity(activity_code, user_id, target_id)
+        def to_activity(activity_code, friendship)
             act = Activity.new(
-                user_id: user_id,
+                user_id: friendship.source_id,
                 activity_code: activity_code,
-                message: {user_id: target_id}.to_json
+                message: {user_id: friendship.target_id, count: friendship.count}.to_json
             )
             if !act.save then
                 render json: '{"status": "ERROR - Activity Failed"}'

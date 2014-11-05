@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 20141105134410) do
   create_table "friendships", force: true do |t|
     t.string   "source_id"
     t.string   "target_id"
+    t.integer  "count"
     t.boolean  "first_time"
     t.datetime "created_at"
     t.datetime "updated_at"
