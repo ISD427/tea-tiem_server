@@ -162,15 +162,34 @@ class PlacesController < ApplicationController
                         first_time: true,
                         cafename: cafename
                         )
+
+                    # activitiesテーブルに追加
+                    to_activity('meet', source_id, target_id)
                     p "======= new friendship created!! ========="
-                elsif Time.now - friendship.updated_at > 3 * 3600 then
-                    # 情報が変更しないとupdateを読んでも実際にupdateしない．
-                    # updated_atを明示的に渡す
+                elsif Time.now - friendship.updated_at > 30 then
                     friendship.update(first_time: false, cafename: cafename, updated_at: Time.now)
+                    # activitiesテーブルに追加
+                    to_activity('meet', source_id, target_id)
                     p "========= friendship updated! ============"
                 else
                     p "======= friendship NOT updated ==========="
                 end
+            end
+        end
+
+        # activitiesテーブルにアクティビティを保存する
+        # params: activity_code, user_id, target_id
+        # user_id: アクティビティを表示する人
+        # target_id: アクティビティの実行者
+        # return: void
+        def to_activity(activity_code, user_id, target_id)
+            act = Activity.new(
+                user_id: user_id,
+                activity_code: activity_code,
+                message: {user_id: target_id}.to_json
+            )
+            if !act.save then
+                render json: '{"status": "ERROR - Activity Failed"}'
             end
         end
 end

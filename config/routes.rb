@@ -9,7 +9,9 @@ Rails.application.routes.draw do
 
     get 'friendships/list'
 
-    get '/messages/receive'
-    post '/messages/write'
+    get 'messages/receive'
+    post 'messages/write'
     post 'messages/delete'
+
+    get 'activities/list'
 end
