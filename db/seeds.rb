@@ -100,32 +100,32 @@ Status.create(
 # Friendship.create(
 #     source_id: "user01",
 #     target_id: "user11",
-#     first_time: true,
+#     count:1,
 #     cafename: "スターバックスコーヒー京都四条通ヤサカビル店"
 #     )
 # Friendship.create(
 #     source_id: "user01",
 #     target_id: "user12",
-#     first_time: true,
+#     count:1,
 #     cafename: "スターバックスコーヒー京都四条通ヤサカビル店"
 #     )
 # Friendship.create(
 #     source_id: "user01",
 #     target_id: "user13",
-#     first_time: false,
+#     count:1,
 #     cafename: "ドトールコーヒーショップ 京都四条通り店"
 #     )
 
 # Friendship.create(
 #     source_id: "user01",
 #     target_id: "user14",
-#     first_time: false,
+#     count:1,
 #     cafename: "スターバックスコーヒー京都四条通ヤサカビル店"
 #     )
 # Friendship.create(
 #     source_id: "user02",
 #     target_id: "user15",
-#     first_time: true,
+#     count:1,
 #     cafename: "スターバックスコーヒー京都四条通ヤサカビル店"
 #     )
 

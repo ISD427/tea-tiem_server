@@ -24,11 +24,11 @@ class FriendshipsController < ApplicationController
             f =  {
                 user_id: friend.target_id,
                 user_name: friend.target.username,
-                first_time: friend.first_time,
+                count: friend.count,
                 prev_time: updated_at, 
                 last_message: msg
                 }
-            f[:thumb] = friend.first_time? ? friend.target.image(:mosaic) : friend.target.image(:thumb)
+            f[:thumb] = friend.count == 1 ? friend.target.image(:mosaic) : friend.target.image(:thumb)
             @res.push(f)
         end
         @res = @res.sort_by{|val| val[:prev_time]}.reverse

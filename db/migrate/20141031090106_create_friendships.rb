@@ -3,6 +3,7 @@ class CreateFriendships < ActiveRecord::Migration
     create_table :friendships do |t|
       t.string :source_id
       t.string :target_id
+      t.integer :count
       t.boolean :first_time
 
       t.timestamps
