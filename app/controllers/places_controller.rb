@@ -167,7 +167,7 @@ class PlacesController < ApplicationController
                     # activitiesテーブルに追加
                     to_activity('meet', friendship)
                     p "======= new friendship created!! ========="
-                elsif Time.now - friendship.updated_at > 30 then
+                elsif Time.now - friendship.updated_at > 3 * 3600 then
                     friendship.update(first_time: false, count: friendship.count + 1, cafename: cafename, updated_at: Time.now)
                     # activitiesテーブルに追加
                     to_activity('meet', friendship)

@@ -1,5 +1,5 @@
 json.array!(@activities_hash) do |activity|
-    json.activity_code activity[:code]
+    json.activity_code activity[:activity_code]
     json.message activity[:message]
     json.time activity[:time]
 
