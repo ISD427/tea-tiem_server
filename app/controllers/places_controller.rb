@@ -151,6 +151,7 @@ class PlacesController < ApplicationController
 
         # params: source_id, target_ids
         # カフェ内にいる異性との関係を更新する
+        # 出会ってから3時間経過しないと「再び出会ったとみなさない」
         def update_friendships(source_id, target_ids, cafename)
             for target_id in target_ids do
                 friendship = Friendship.find_by(source_id: source_id, target_id: target_id)
@@ -161,8 +162,14 @@ class PlacesController < ApplicationController
                         first_time: true,
                         cafename: cafename
                         )
+                    p "======= new friendship created!! ========="
+                elsif Time.now - friendship.updated_at > 3 * 3600 then
+                    # 情報が変更しないとupdateを読んでも実際にupdateしない．
+                    # updated_atを明示的に渡す
+                    friendship.update(first_time: false, cafename: cafename, updated_at: Time.now)
+                    p "========= friendship updated! ============"
                 else
-                    friendship.update(first_time: false, cafename: cafename)
+                    p "======= friendship NOT updated ==========="
                 end
             end
         end

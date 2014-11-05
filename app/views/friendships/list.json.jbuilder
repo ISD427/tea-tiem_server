@@ -6,3 +6,4 @@ json.array!(@res) do |friend|
     json.updated_at friend[:prev_time]
     json.latest_message friend[:last_message]
 end
+

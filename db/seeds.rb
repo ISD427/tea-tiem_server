@@ -47,7 +47,22 @@ User.create(
     age: 24,
     image: URI.parse("http://www8391uo.sakura.ne.jp/images/female3.jpg")
     )
-
+User.create(
+    id: "user14",
+    username: "4子",
+    sex: "Female",
+    profile: "profileだよ",
+    age: 24,
+    image: URI.parse("http://www8391uo.sakura.ne.jp/images/female4.jpg")
+    )
+User.create(
+    id: "user15",
+    username: "5子",
+    sex: "Female",
+    profile: "profileだよ",
+    age: 24,
+    image: URI.parse("http://www8391uo.sakura.ne.jp/images/female5.jpg")
+    )
 # == Statusテーブル
 Status.create(
     user_id: "user01",
@@ -73,7 +88,14 @@ Status.create(
     user_id: "user13",
     status: "OUT"
     )
-
+Status.create(
+    user_id: "user14",
+    status: "OUT"
+    )
+Status.create(
+    user_id: "user15",
+    status: "OUT"
+    )
 # == Friendshipsテーブル
 # Friendship.create(
 #     source_id: "user01",
@@ -95,49 +117,43 @@ Status.create(
 #     )
 
 # Friendship.create(
-#     source_id: "user02",
-#     target_id: "user11",
+#     source_id: "user01",
+#     target_id: "user14",
 #     first_time: false,
 #     cafename: "スターバックスコーヒー京都四条通ヤサカビル店"
 #     )
 # Friendship.create(
 #     source_id: "user02",
-#     target_id: "user12",
+#     target_id: "user15",
 #     first_time: true,
 #     cafename: "スターバックスコーヒー京都四条通ヤサカビル店"
-#     )
-# Friendship.create(
-#     source_id: "user02",
-#     target_id: "user13",
-#     first_time: false,
-#     cafename: "ドトールコーヒーショップ 京都四条通り店"
 #     )
 
 # == messagesテーブル
 Message.create(
     source_id: "user01",
     target_id: "user11",
-    message: "こんにちは！庄田１郎です",
+    message: "こんにちは！１郎です",
     deleted: false
     )
 sleep(1)
 Message.create(
     source_id: "user11",
     target_id: "user01",
-    message: "はじめまして！庄田１子ですわ",
+    message: "はじめまして！１子ですわ",
     deleted: false
     )
 sleep(1)
 Message.create(
     source_id: "user01",
     target_id: "user11",
-    message: "あなたも庄田ですか．奇遇ですね",
+    message: "１子って素敵な名前ですね",
     deleted: false
     )
 sleep(1)
 Message.create(
     source_id: "user11",
     target_id: "user01",
-    message: "ほんとですね＾＾",
+    message: "ありがとうございます！",
     deleted: false
     )
